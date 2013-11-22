@@ -1,1 +1,0 @@
-servohub from BasWheel with lego axle to be able to be inserted in BasWheel
