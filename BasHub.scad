@@ -1,42 +1,41 @@
-servo_hub_extra_height = 2;  // Extra height of the servo hub
-servo_hole_count = 4;  // How many screw hole will the servo hub have
-servo_attachment_height = 2;  // Height of the servo hub base
-magnet_offset = 3;  // Distance of the magnet holes from the outside
-magnet_diameter = 0;  // Magnet's diameter
+servo_hub_extra_height = 2;
+servo_hole_count = 4;
+servo_attachment_height = 2;
+magnet_offset = 3;
+magnet_diameter = 0;
 
-// Same as BasWheel's parameters
-hub_type = "hubattachment";  // define hubtype to be used. Options are (lego, hubattachment)
-wheel_height = 10;  // height of the wheel
-hub_diameter = 5;  // diameter of the hub
-hub_thickness = 5;  // thickness of the hub
-slot_OD = 9.6;  // Outer diameter of the screw slot (attachment to BasWheel). Be sure to leave some padding for the Hub, glue and Wheel to fit together.
+// Same as BasWheel parameters
+hub_type = "hubattachment"; // (lego, hubattachment)
+wheel_height = 10;
+hub_diameter = 5;
+hub_thickness = 5;
+slot_OD = 10;
+slot_height = 2;
 
 /*
  *
- * BasHub v1.03
+ * BasHub v1.01
  *
  * by Basile Laderchi
  *
- * Licensed under Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International http://creativecommons.org/licenses/by-nc-sa/4.0/
+ * Licensed under Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported http://creativecommons.org/licenses/by-nc-sa/3.0/
  *
- * v 1.03, 29 Nov 2013 : Changed license from BY-NC-SA v3 to BY-NC-SA v4.0 and added comments to parameters
- * v 1.02, 26 Nov 2013 : Removed parameter slot_height
- * v 1.01, 22 Nov 2013 : Changed license from BY-SA to BY-NC-SA and added parameter hub_type
+ * v 1.01, 22 Nov 2013 : Changed license and added parameter hub_type
  * v 1.00, 03 Sep 2013 : Initial release
  *
  */
 
-basHub(hub_type, wheel_height, hub_diameter, hub_thickness, slot_OD, servo_hub_extra_height, servo_hole_count, servo_attachment_height, magnet_offset, magnet_diameter, $fn=100);
+basHub(hub_type, wheel_height, hub_diameter, hub_thickness, slot_OD, slot_height, servo_hub_extra_height, servo_hole_count, servo_attachment_height, magnet_offset, magnet_diameter, $fn=100);
 
-module basHub(hub_type, height, hub_diameter, hub_thickness, slot_OD, servo_hub_extra_height, servo_hole_count, servo_attachment_height, magnet_offset, magnet_diameter) {
+module basHub(hub_type, height, hub_diameter, hub_thickness, slot_OD, slot_height, servo_hub_extra_height, servo_hole_count, servo_attachment_height, magnet_offset, magnet_diameter) {
 	hub_radius = hub_diameter / 2;
 	magnet_radius = magnet_diameter / 2;
 	hub_other_outer_radius = hub_radius + hub_thickness;
 
-	hub(hub_type, hub_radius, hub_thickness, slot_OD, servo_hub_extra_height, servo_hole_count, servo_attachment_height, height, magnet_offset, magnet_radius);
+	hub(hub_type, hub_radius, hub_thickness, slot_OD, slot_height, servo_hub_extra_height, servo_hole_count, servo_attachment_height, height, magnet_offset, magnet_radius);
 }
 
-module hub(type, inner_radius, thickness, slot_OD, servo_extra_height, servo_hole_count, servo_attachment_height, tire_height, magnet_offset, magnet_radius) {
+module hub(type, inner_radius, thickness, slot_OD, slot_height, servo_extra_height, servo_hole_count, servo_attachment_height, tire_height, magnet_offset, magnet_radius) {
 	padding = 1;
 	small_padding = 0.1;
 	servo_outer_radius = 18;
@@ -47,7 +46,6 @@ module hub(type, inner_radius, thickness, slot_OD, servo_extra_height, servo_hol
 	radius = inner_radius + thickness;
 
 	slot_radius = slot_OD / 2;
-	slot_height = tire_height / 2;
 	slot_x = tire_height - slot_height;
 
 	slot_hole_height = servo_extra_height + servo_attachment_height + slot_height;
