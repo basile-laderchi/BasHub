@@ -19,9 +19,9 @@ slot_OD = 9.6;  // Outer diameter of the screw slot (attachment to BasWheel). Be
  *
  * Licensed under Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International http://creativecommons.org/licenses/by-nc-sa/4.0/
  *
- * v 1.03, 29 Nov 2013 : Changed license from BY-NC-SA v3 to BY-NC-SA v4.0 and added comments to parameters
+ * v 1.03, 29 Nov 2013 : Changed license from CC BY-NC-SA 3.0 to CC BY-NC-SA 4.0 and added comments to parameters
  * v 1.02, 26 Nov 2013 : Removed parameter slot_height
- * v 1.01, 22 Nov 2013 : Changed license from BY-SA to BY-NC-SA and added parameter hub_type
+ * v 1.01, 22 Nov 2013 : Changed license from CC BY-SA 3.0 to CC BY-NC-SA 3.0 and added parameter hub_type
  * v 1.00, 03 Sep 2013 : Initial release
  *
  */
