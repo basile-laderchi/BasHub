@@ -1,5 +1,7 @@
 servo_hub_extra_height = 2;  // Extra height of the servo hub
 servo_hole_count = 4;  // How many screw hole will the servo hub have
+servo_hole_ID = 2.5; // Inner hole diameter
+servo_hole_OD = 1.5; // Outer hole diameter
 servo_attachment_height = 2;  // Height of the servo hub base
 magnet_offset = 3;  // Distance of the magnet holes from the outside
 magnet_diameter = 0;  // Magnet's diameter
@@ -13,12 +15,13 @@ slot_OD = 9.6;  // Outer diameter of the screw slot (attachment to BasWheel). Be
 
 /*
  *
- * BasHub v1.03
+ * BasHub v1.04
  *
  * by Basile Laderchi
  *
  * Licensed under Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International http://creativecommons.org/licenses/by-nc-sa/4.0/
  *
+ * v 1.04,  2 Jan 2014 : Added parameters servo_hole_ID and servo_hole_OD
  * v 1.03, 29 Nov 2013 : Changed license from CC BY-NC-SA 3.0 to CC BY-NC-SA 4.0 and added comments to parameters
  * v 1.02, 26 Nov 2013 : Removed parameter slot_height
  * v 1.01, 22 Nov 2013 : Changed license from CC BY-SA 3.0 to CC BY-NC-SA 3.0 and added parameter hub_type
@@ -26,17 +29,17 @@ slot_OD = 9.6;  // Outer diameter of the screw slot (attachment to BasWheel). Be
  *
  */
 
-basHub(hub_type, wheel_height, hub_diameter, hub_thickness, slot_OD, servo_hub_extra_height, servo_hole_count, servo_attachment_height, magnet_offset, magnet_diameter, $fn=100);
+basHub(hub_type, wheel_height, hub_diameter, hub_thickness, slot_OD, servo_hub_extra_height, servo_hole_count, servo_hole_ID, servo_hole_OD, servo_attachment_height, magnet_offset, magnet_diameter, $fn=100);
 
-module basHub(hub_type, height, hub_diameter, hub_thickness, slot_OD, servo_hub_extra_height, servo_hole_count, servo_attachment_height, magnet_offset, magnet_diameter) {
+module basHub(hub_type, height, hub_diameter, hub_thickness, slot_OD, servo_hub_extra_height, servo_hole_count, servo_hole_ID, servo_hole_OD, servo_attachment_height, magnet_offset, magnet_diameter) {
 	hub_radius = hub_diameter / 2;
 	magnet_radius = magnet_diameter / 2;
 	hub_other_outer_radius = hub_radius + hub_thickness;
 
-	hub(hub_type, hub_radius, hub_thickness, slot_OD, servo_hub_extra_height, servo_hole_count, servo_attachment_height, height, magnet_offset, magnet_radius);
+	hub(hub_type, hub_radius, hub_thickness, slot_OD, servo_hub_extra_height, servo_hole_count, servo_hole_ID, servo_hole_OD, servo_attachment_height, height, magnet_offset, magnet_radius);
 }
 
-module hub(type, inner_radius, thickness, slot_OD, servo_extra_height, servo_hole_count, servo_attachment_height, tire_height, magnet_offset, magnet_radius) {
+module hub(type, inner_radius, thickness, slot_OD, servo_extra_height, servo_hole_count, servo_hole_ID, servo_hole_OD, servo_attachment_height, tire_height, magnet_offset, magnet_radius) {
 	padding = 1;
 	small_padding = 0.1;
 	servo_outer_radius = 18;
@@ -56,7 +59,7 @@ module hub(type, inner_radius, thickness, slot_OD, servo_extra_height, servo_hol
 	rotate([180, 0, 0]) {
 		if (type == "lego") {
 			union() {
-				servoHub(servo_outer_radius, radius, inner_radius, servo_extra_height, servo_hole_count, servo_attachment_height, tire_height, magnet_offset, magnet_radius);
+				servoHub(servo_outer_radius, radius, inner_radius, servo_extra_height, servo_hole_count, servo_hole_ID, servo_hole_OD, servo_attachment_height, tire_height, magnet_offset, magnet_radius);
 				difference() {
 					rotate([0, 90, 0]) {
 						translate([-(tire_height + servo_attachment_height) / 2, -lego_piece_size / 2, -lego_piece_size / 2]) {
@@ -73,7 +76,7 @@ module hub(type, inner_radius, thickness, slot_OD, servo_extra_height, servo_hol
 		} else if (type == "hubattachment") {
 			difference() {
 				union() {
-					servoHub(servo_outer_radius, radius, inner_radius, servo_extra_height, servo_hole_count, servo_attachment_height, tire_height, magnet_offset, magnet_radius);
+					servoHub(servo_outer_radius, radius, inner_radius, servo_extra_height, servo_hole_count, servo_hole_ID, servo_hole_OD, servo_attachment_height, tire_height, magnet_offset, magnet_radius);
 					translate([0, 0, slot_x / 2]) {
 						cylinder(r=slot_radius, h=slot_height + small_padding, center=true);
 					}
@@ -86,12 +89,12 @@ module hub(type, inner_radius, thickness, slot_OD, servo_extra_height, servo_hol
 	}
 }
 
-module servoHub(outer_radius, radius, inner_radius, extra_height, hole_count, attachment_height, tire_height, magnet_offset, magnet_radius) {
+module servoHub(outer_radius, radius, inner_radius, extra_height, hole_count, hole_ID, hole_OD, attachment_height, tire_height, magnet_offset, magnet_radius) {
 	padding = 0.1;
 
 	if (magnet_radius > 0) {
 		difference() {
-			servoSimpleHub(outer_radius, radius, inner_radius, extra_height, hole_count, attachment_height, tire_height);
+			servoSimpleHub(outer_radius, radius, inner_radius, extra_height, hole_count, hole_ID, hole_OD, attachment_height, tire_height);
 			for (i = [0 : hole_count - 1]) {
 				rotate([0, 0, i * 360 / hole_count + (360 / hole_count / 2)]) {
 					translate([0, outer_radius - magnet_radius - magnet_offset, tire_height / 2 + extra_height - padding]) {
@@ -101,12 +104,18 @@ module servoHub(outer_radius, radius, inner_radius, extra_height, hole_count, at
 			}
 		}
 	} else {
-		servoSimpleHub(outer_radius, radius, inner_radius, extra_height, hole_count, attachment_height, tire_height);
+		servoSimpleHub(outer_radius, radius, inner_radius, extra_height, hole_count, hole_ID, hole_OD, attachment_height, tire_height);
 	}
 }
 
-module servoSimpleHub(outer_radius, radius, inner_radius, extra_height, hole_count, attachment_height, tire_height) {
+module servoSimpleHub(outer_radius, radius, inner_radius, extra_height, hole_count, hole_ID, hole_OD, attachment_height, tire_height) {
 	padding = 0.1;
+
+	inner_hole_radius = hole_ID / 2;
+	outer_hole_radius = hole_OD / 2;
+
+	inner_hole_y = radius + inner_hole_radius;
+	outer_hole_y = outer_radius - outer_hole_radius - 2;
 
 	translate([0, 0, tire_height / 2]) {
 		difference() {
@@ -119,11 +128,11 @@ module servoSimpleHub(outer_radius, radius, inner_radius, extra_height, hole_cou
 			for (i = [0 : hole_count - 1]) {
 				rotate([0, 0, i * 360 / hole_count]) {
 					hull() {
-						translate([0, 5, -padding]) {
-							cylinder(r=.75, h=attachment_height + extra_height + padding * 2);
+						translate([0, inner_hole_y, -padding]) {
+							cylinder(r=inner_hole_radius, h=attachment_height + extra_height + padding * 2);
 						}
-						translate([0, 14, -padding]) {
-							cylinder(r=.75, h=attachment_height + extra_height + padding * 2);
+						translate([0, outer_hole_y, -padding]) {
+							cylinder(r=outer_hole_radius, h=attachment_height + extra_height + padding * 2);
 						}
 					}
 				}
